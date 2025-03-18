@@ -17,16 +17,16 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class CdrService {
 
-    private final SubscriberRepository subscriberRepository;
+    private final SubscriberService subscriberService;
     private final CdrRepository cdrRepository;
 
-    public CdrService(SubscriberRepository subscriberRepository, CdrRepository cdrRepository) {
-        this.subscriberRepository = subscriberRepository;
+    public CdrService(SubscriberService subscriberService, CdrRepository cdrRepository) {
+        this.subscriberService = subscriberService;
         this.cdrRepository = cdrRepository;
     }
 
     public void generateCdrForOneYear(){
-        List<Subscriber> subscribers = subscriberRepository.findAll();
+        List<Subscriber> subscribers = subscriberService.findAll();
 
         List<Cdr> generatedCdrs = new ArrayList<>();
 
@@ -79,10 +79,6 @@ public class CdrService {
         generatedCdrs.sort(Comparator.comparing(Cdr::getStartDateTime));
 
         cdrRepository.saveAll(generatedCdrs);
-    }
-
-    public List<Cdr> findCdrByCallerNumberOrCalledNumber(String msisdn){
-        return cdrRepository.findCdrByCallerNumberOrCalledNumber(msisdn);
     }
 
     public List<Cdr> findAllByCalledNumber(String msisdn) {

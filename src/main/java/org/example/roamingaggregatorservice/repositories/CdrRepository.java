@@ -11,9 +11,6 @@ public interface CdrRepository extends JpaRepository<Cdr,Long> {
     @Override
     <S extends Cdr> List<S> saveAll(Iterable<S> entities);
 
-    @Query("select c from Cdr c where c.callerNumber=:msidn or c.calledNumber=:msidn")
-    List<Cdr> findCdrByCallerNumberOrCalledNumber(String msisdn);
-
     List<Cdr> findAllByCalledNumber(String calledNumber);
 
     List<Cdr> findAllByCallerNumber(String callerNumber);

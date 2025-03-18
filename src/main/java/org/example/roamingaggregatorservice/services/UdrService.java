@@ -5,11 +5,10 @@ import org.example.roamingaggregatorservice.dto.UdrDTO;
 import org.example.roamingaggregatorservice.dto.UdrForOneUserDTO;
 import org.example.roamingaggregatorservice.entities.Cdr;
 import org.example.roamingaggregatorservice.entities.Subscriber;
-import org.example.roamingaggregatorservice.repositories.SubscriberRepository;
+import org.example.roamingaggregatorservice.exceptions.NoSuchSubscriberException;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +16,18 @@ import java.util.List;
 public class UdrService {
 
     private final CdrService cdrService;
-    private final SubscriberRepository subscriberRepository;
+    private final SubscriberService subscriberService;
 
-    public UdrService(CdrService cdrService, SubscriberRepository subscriberRepository) {
+
+    public UdrService(CdrService cdrService, SubscriberService subscriberService) {
         this.cdrService = cdrService;
-        this.subscriberRepository = subscriberRepository;
+        this.subscriberService = subscriberService;
     }
 
     public UdrDTO generateUdrForSubscriberForMonth(String msisdn, String yearAndMonth){
+
+        subscriberService.checkIfSubscriberExistsOrElseThrowNoSuchSubscriberException(msisdn);
+
         int year = Integer.valueOf(yearAndMonth.split("-")[0]);
         int month = Integer.valueOf(yearAndMonth.split("-")[1]);
 
@@ -38,6 +41,9 @@ public class UdrService {
     }
 
     public UdrDTO generateUdrForSubscriberForAllTime(String msisdn){
+
+        subscriberService.checkIfSubscriberExistsOrElseThrowNoSuchSubscriberException(msisdn);
+
         List<Cdr> cdrs = cdrService.findAllByCalledNumber(msisdn);
         String totalTimeOfIncomingCalls =  calculateTotalTimeOfCalls(cdrs);
 
@@ -48,7 +54,9 @@ public class UdrService {
     }
 
     public List<UdrDTO> generateUdrForAllSubscribersForMonth(String yearAndMonth){
-        List<Subscriber> subscribers = subscriberRepository.findAll();
+
+        List<Subscriber> subscribers = subscriberService.findAll();
+
         List<UdrDTO> udrDTOList = new ArrayList<>();
         subscribers.forEach( subscriber -> {
             udrDTOList.add(generateUdrForSubscriberForMonth(subscriber.getMsisdn(),yearAndMonth));
@@ -57,6 +65,7 @@ public class UdrService {
     }
 
     private String calculateTotalTimeOfCalls(List<Cdr> cdrs) {
+
         Duration totalDuration = Duration.ofSeconds(0);
 
         for (Cdr cdr: cdrs){

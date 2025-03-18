@@ -19,4 +19,10 @@ public class RestResponseExceptionsHandler {
         ExceptionDTO dto = new ExceptionDTO(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = NoSuchSubscriberException.class)
+    protected ResponseEntity<ExceptionDTO> handleConflict(NoSuchSubscriberException ex) {
+        ExceptionDTO dto = new ExceptionDTO(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
 }
