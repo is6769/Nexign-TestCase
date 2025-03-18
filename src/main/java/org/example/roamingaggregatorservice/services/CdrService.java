@@ -9,19 +9,18 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class CdrGeneratorService {
+public class CdrService {
 
     private final SubscriberRepository subscriberRepository;
     private final CdrRepository cdrRepository;
 
-    public CdrGeneratorService(SubscriberRepository subscriberRepository, CdrRepository cdrRepository) {
+    public CdrService(SubscriberRepository subscriberRepository, CdrRepository cdrRepository) {
         this.subscriberRepository = subscriberRepository;
         this.cdrRepository = cdrRepository;
     }
@@ -66,10 +65,11 @@ public class CdrGeneratorService {
             var callStartDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(callStartMillis),ZoneId.of("Europe/Moscow"));
             var callFinishDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(callFinishMillis),ZoneId.of("Europe/Moscow"));
 
+            //TODO choose to add or not the inverse side of call(i mean if someone called someone, that means that someone was called by someone)
 
             generatedCdr.setCallType(callType);
-            generatedCdr.setCallerNumber(caller.getPhoneNumber());
-            generatedCdr.setCalledNumber(called.getPhoneNumber());
+            generatedCdr.setCallerNumber(caller.getMsisdn());
+            generatedCdr.setCalledNumber(called.getMsisdn());
             generatedCdr.setStartDateTime(callStartDateTime);
             generatedCdr.setFinishDateTime(callFinishDateTime);
 

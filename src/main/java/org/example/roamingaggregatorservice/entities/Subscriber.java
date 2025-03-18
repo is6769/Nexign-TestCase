@@ -10,11 +10,8 @@ public class Subscriber {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "phone_number", unique = true, nullable = false)
-    private String phoneNumber;
-
-    public Subscriber() {
-    }
+    @Column(name = "msisdn", unique = true, nullable = false)
+    private String msisdn;
 
     public Long getId() {
         return id;
@@ -24,11 +21,11 @@ public class Subscriber {
         this.id = id;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getMsisdn() {
+        return msisdn;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
     }
 }
