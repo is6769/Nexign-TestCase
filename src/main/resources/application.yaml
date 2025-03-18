@@ -15,3 +15,8 @@ spring:
       ddl-auto: create-drop
     show-sql: true
     defer-datasource-initialization: true
+
+springdoc:
+  swagger-ui:
+    path: /v1/swagger-ui.html
+    show-common-extensions: true
