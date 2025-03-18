@@ -31,14 +31,13 @@ public class UdrRestController {
             @RequestParam String msisdn,
             @RequestParam(required = false) @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])$", message = "Provided year and month don't match format yyyy-mm") String yearAndMonth
     ) {
+        UdrDTO dto;
         if (Objects.nonNull(yearAndMonth)){
-            UdrDTO dto = udrService.generateUdrForSubscriberForMonth(msisdn, yearAndMonth);
-            ResponseEntity.ok(dto);
+            dto = udrService.generateUdrForSubscriberForMonth(msisdn, yearAndMonth);
         } else {
-            UdrDTO dto = udrService.generateUdrForSubscriberForAllTime();
-            ResponseEntity.ok(dto);
+            dto = udrService.generateUdrForSubscriberForAllTime(msisdn);
         }
-        return null;
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/all")

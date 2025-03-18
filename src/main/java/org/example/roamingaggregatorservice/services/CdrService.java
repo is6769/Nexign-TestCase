@@ -81,4 +81,15 @@ public class CdrService {
         cdrRepository.saveAll(generatedCdrs);
     }
 
+    public List<Cdr> findCdrByCallerNumberOrCalledNumber(String msisdn){
+        return cdrRepository.findCdrByCallerNumberOrCalledNumber(msisdn);
+    }
+
+    public List<Cdr> findAllByCalledNumber(String msisdn) {
+        return cdrRepository.findAllByCalledNumber(msisdn);
+    }
+
+    public List<Cdr> findAllByCallerNumber(String msisdn) {
+        return cdrRepository.findAllByCallerNumber(msisdn);
+    }
 }
