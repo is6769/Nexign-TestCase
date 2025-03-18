@@ -4,19 +4,24 @@ import org.example.roamingaggregatorservice.dto.CallDataDTO;
 import org.example.roamingaggregatorservice.dto.UdrDTO;
 import org.example.roamingaggregatorservice.dto.UdrForOneUserDTO;
 import org.example.roamingaggregatorservice.entities.Cdr;
+import org.example.roamingaggregatorservice.entities.Subscriber;
+import org.example.roamingaggregatorservice.repositories.SubscriberRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UdrService {
 
     private final CdrService cdrService;
+    private final SubscriberRepository subscriberRepository;
 
-    public UdrService(CdrService cdrService) {
+    public UdrService(CdrService cdrService, SubscriberRepository subscriberRepository) {
         this.cdrService = cdrService;
+        this.subscriberRepository = subscriberRepository;
     }
 
     public UdrDTO generateUdrForSubscriberForMonth(String msisdn, String yearAndMonth){
@@ -42,6 +47,15 @@ public class UdrService {
         return new UdrForOneUserDTO(msisdn, new CallDataDTO(totalTimeOfIncomingCalls), new CallDataDTO(totalTimeOfOutcomingCalls));
     }
 
+    public List<UdrDTO> generateUdrForAllSubscribersForMonth(String yearAndMonth){
+        List<Subscriber> subscribers = subscriberRepository.findAll();
+        List<UdrDTO> udrDTOList = new ArrayList<>();
+        subscribers.forEach( subscriber -> {
+            udrDTOList.add(generateUdrForSubscriberForMonth(subscriber.getMsisdn(),yearAndMonth));
+        });
+        return udrDTOList;
+    }
+
     private String calculateTotalTimeOfCalls(List<Cdr> cdrs) {
         Duration totalDuration = Duration.ofSeconds(0);
 
@@ -53,7 +67,5 @@ public class UdrService {
         return String.format("%02d:%02d:%02d", totalDuration.toHours(), totalDuration.toMinutesPart(), totalDuration.toSecondsPart());
     }
 
-    public UdrDTO generateUdrForAllSubscribersForMonth(String yearAndMonth){
-        return null;
-    }
+
 }

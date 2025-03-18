@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -41,10 +42,10 @@ public class UdrRestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<UdrDTO> getUdrForAllSubscribersForOneMonth(
+    public ResponseEntity<List<UdrDTO>> getUdrForAllSubscribersForOneMonth(
             @RequestParam String yearAndMonth
     ){
-        UdrDTO dto = udrService.generateUdrForAllSubscribersForMonth(yearAndMonth);
-        return ResponseEntity.ok(dto);
+        List<UdrDTO> dtos = udrService.generateUdrForAllSubscribersForMonth(yearAndMonth);
+        return ResponseEntity.ok(dtos);
     }
 }
