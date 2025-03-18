@@ -2,7 +2,6 @@ package org.example.roamingaggregatorservice.services;
 
 import org.example.roamingaggregatorservice.dto.CallDataDTO;
 import org.example.roamingaggregatorservice.dto.UdrDTO;
-import org.example.roamingaggregatorservice.dto.UdrForOneUserDTO;
 import org.example.roamingaggregatorservice.entities.Cdr;
 import org.example.roamingaggregatorservice.entities.Subscriber;
 import org.example.roamingaggregatorservice.exceptions.NoSuchSubscriberException;
@@ -37,7 +36,7 @@ public class UdrService {
         cdrs = cdrService.findAllByCallerNumberAndStartDateTimeLike(msisdn, year, month);
         String totalTimeOfOutcomingCalls =  calculateTotalTimeOfCalls(cdrs);
 
-        return new UdrForOneUserDTO(msisdn, new CallDataDTO(totalTimeOfIncomingCalls), new CallDataDTO(totalTimeOfOutcomingCalls));
+        return new UdrDTO(msisdn, new CallDataDTO(totalTimeOfIncomingCalls), new CallDataDTO(totalTimeOfOutcomingCalls));
     }
 
     public UdrDTO generateUdrForSubscriberForAllTime(String msisdn){
@@ -50,7 +49,7 @@ public class UdrService {
         cdrs = cdrService.findAllByCallerNumber(msisdn);
         String totalTimeOfOutcomingCalls =  calculateTotalTimeOfCalls(cdrs);
 
-        return new UdrForOneUserDTO(msisdn, new CallDataDTO(totalTimeOfIncomingCalls), new CallDataDTO(totalTimeOfOutcomingCalls));
+        return new UdrDTO(msisdn, new CallDataDTO(totalTimeOfIncomingCalls), new CallDataDTO(totalTimeOfOutcomingCalls));
     }
 
     public List<UdrDTO> generateUdrForAllSubscribersForMonth(String yearAndMonth){

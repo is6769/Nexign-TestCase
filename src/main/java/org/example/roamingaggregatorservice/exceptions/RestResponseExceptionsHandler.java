@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 
@@ -16,13 +14,23 @@ public class RestResponseExceptionsHandler {
 
     @ExceptionHandler(value = ConstraintViolationException.class)
     protected ResponseEntity<ExceptionDTO> handleConflict(ConstraintViolationException ex) {
-        ExceptionDTO dto = new ExceptionDTO(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        ExceptionDTO dto = new ExceptionDTO(
+            LocalDateTime.now(), 
+            HttpStatus.BAD_REQUEST.value(),
+            "VALIDATION_ERROR", 
+            ex.getMessage()
+        );
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = NoSuchSubscriberException.class)
     protected ResponseEntity<ExceptionDTO> handleConflict(NoSuchSubscriberException ex) {
-        ExceptionDTO dto = new ExceptionDTO(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+        ExceptionDTO dto = new ExceptionDTO(
+            LocalDateTime.now(), 
+            HttpStatus.NOT_FOUND.value(),
+            "NOT_FOUND", 
+            ex.getMessage()
+        );
+        return new ResponseEntity<>(dto, HttpStatus.NOT_FOUND);
     }
 }
