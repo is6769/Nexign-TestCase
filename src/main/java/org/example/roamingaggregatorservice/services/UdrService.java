@@ -20,7 +20,16 @@ public class UdrService {
     }
 
     public UdrDTO generateUdrForSubscriberForMonth(String msisdn, String yearAndMonth){
-        return null;
+        int year = Integer.valueOf(yearAndMonth.split("-")[0]);
+        int month = Integer.valueOf(yearAndMonth.split("-")[1]);
+
+        List<Cdr> cdrs = cdrService.findAllByCalledNumberAndStartDateTimeLike(msisdn, year, month);
+        String totalTimeOfIncomingCalls =  calculateTotalTimeOfCalls(cdrs);
+
+        cdrs = cdrService.findAllByCallerNumberAndStartDateTimeLike(msisdn, year, month);
+        String totalTimeOfOutcomingCalls =  calculateTotalTimeOfCalls(cdrs);
+
+        return new UdrForOneUserDTO(msisdn, new CallDataDTO(totalTimeOfIncomingCalls), new CallDataDTO(totalTimeOfOutcomingCalls));
     }
 
     public UdrDTO generateUdrForSubscriberForAllTime(String msisdn){

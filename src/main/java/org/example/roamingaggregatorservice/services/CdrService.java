@@ -59,7 +59,7 @@ public class CdrService {
 
             long durationMillis = ThreadLocalRandom.current().nextLong(1,5*60*60*1000);
 
-            long callStartMillis = ThreadLocalRandom.current().nextLong(startMillis,endMillis-durationMillis);
+            long callStartMillis = ThreadLocalRandom.current().nextLong(startMillis,endMillis-durationMillis);//endMillis-durationMillis to make [l;r) maybe redo
             long callFinishMillis = callStartMillis + durationMillis;
 
             var callStartDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(callStartMillis),ZoneId.of("Europe/Moscow"));
@@ -91,5 +91,13 @@ public class CdrService {
 
     public List<Cdr> findAllByCallerNumber(String msisdn) {
         return cdrRepository.findAllByCallerNumber(msisdn);
+    }
+
+    public List<Cdr> findAllByCalledNumberAndStartDateTimeLike(String msisdn, int year, int month) {
+        return cdrRepository.findAllByCalledNumberAndStartDateTime(msisdn, year, month);
+    }
+
+    public List<Cdr> findAllByCallerNumberAndStartDateTimeLike(String msisdn, int year, int month) {
+        return cdrRepository.findAllByCallerNumberAndStartDateTime(msisdn, year, month);
     }
 }
