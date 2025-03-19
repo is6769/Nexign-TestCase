@@ -1,6 +1,7 @@
 package org.example.roamingaggregatorservice.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -42,9 +43,22 @@ public class CdrRestController {
     }
 
     @PostMapping("/report")
+    @Operation(
+            summary = "Сгенерировать отчет по CDR",
+            description = "Генерирует отчет по записям данных вызовов (CDR) для указанного MSISDN в заданном временном диапазоне"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Процесс генерации отчета успешно запущен",
+                    content = @Content(schema = @Schema(type = "string", example = "Successfully started generating cdr-report. UUID: a718ae8f-edf4-4c00-88d5-9d53eea95178")))
+    })
     public ResponseEntity<String> generateCdrReport(
+            @Parameter(description = "Номер абонента (MSISDN)", required = true, example = "79999999999")
             @RequestParam String msisdn,
+
+            @Parameter(description = "Дата начала периода", required = true, example = "2024-01-01")
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+
+            @Parameter(description = "Дата окончания периода", required = true, example = "2024-03-01")
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
     {
         UUID requestUUID = UUID.randomUUID();
