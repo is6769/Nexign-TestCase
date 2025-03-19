@@ -13,7 +13,7 @@ public record ExceptionDTO(
         int status,
         
         @Schema(description = "Тип ошибки", example = "VALIDATION_ERROR", 
-               allowableValues = {"VALIDATION_ERROR", "NOT_FOUND", "SERVER_ERROR"})
+               allowableValues = {"VALIDATION_ERROR", "NOT_FOUND", "SERVER_ERROR", "BAD_REQUEST"})
         String errorType,
         
         @Schema(description = "Сообщение об ошибке", example = "Неверный формат номера телефона")

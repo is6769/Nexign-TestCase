@@ -2,6 +2,7 @@ package org.example.roamingaggregatorservice.services;
 
 import org.example.roamingaggregatorservice.entities.Cdr;
 import org.example.roamingaggregatorservice.entities.Subscriber;
+import org.example.roamingaggregatorservice.exceptions.StartDateIsAfterEndDateException;
 import org.example.roamingaggregatorservice.repositories.CdrRepository;
 import org.example.roamingaggregatorservice.repositories.SubscriberRepository;
 import org.springframework.scheduling.annotation.Async;
@@ -106,6 +107,10 @@ public class CdrService {
     }
 
     public void generateCdrReport(String msisdn, LocalDate startDate, LocalDate endDate, UUID requestUUID) {
+
+        subscriberService.checkIfSubscriberExistsOrElseThrowNoSuchSubscriberException(msisdn);
+
+        if (startDate.isAfter(endDate)) throw new StartDateIsAfterEndDateException(startDate, endDate);
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
