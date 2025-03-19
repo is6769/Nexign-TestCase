@@ -8,8 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.roamingaggregatorservice.dto.ExceptionDTO;
 import org.example.roamingaggregatorservice.services.CdrService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/v1/cdr")
@@ -34,5 +39,20 @@ public class CdrRestController {
     public ResponseEntity<String> generateCDR(){
         cdrService.generateCdrForOneYear();
         return ResponseEntity.ok("Successfully generated cdr.");
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity<String> generateCdrReport(
+            @RequestParam String msisdn,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
+    {
+        UUID requestUUID = UUID.randomUUID();
+
+        //CompletableFuture.runAsync(()->cdrService.generateCdrReport(msisdn, startDate, endDate, requestUUID));
+
+        cdrService.generateCdrReport(msisdn, startDate, endDate, requestUUID);
+
+        return ResponseEntity.ok("Successfully started generating cdr-report.UUID: %s".formatted(requestUUID));
     }
 }

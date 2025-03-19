@@ -3,6 +3,8 @@ package org.example.roamingaggregatorservice.entities;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "subscribers")
 @Schema(description = "Сущность абонента")
@@ -31,5 +33,25 @@ public class Subscriber {
 
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Subscriber that = (Subscriber) o;
+        return Objects.equals(id, that.id) && Objects.equals(msisdn, that.msisdn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, msisdn);
+    }
+
+    @Override
+    public String toString() {
+        return "Subscriber{" +
+                "id=" + id +
+                ", msisdn='" + msisdn + '\'' +
+                '}';
     }
 }

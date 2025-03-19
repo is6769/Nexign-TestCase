@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "sdrs")
@@ -81,5 +82,29 @@ public class Cdr {
 
     public void setFinishDateTime(LocalDateTime finishDateTime) {
         this.finishDateTime = finishDateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Cdr cdr = (Cdr) o;
+        return Objects.equals(id, cdr.id) && Objects.equals(callType, cdr.callType) && Objects.equals(callerNumber, cdr.callerNumber) && Objects.equals(calledNumber, cdr.calledNumber) && Objects.equals(startDateTime, cdr.startDateTime) && Objects.equals(finishDateTime, cdr.finishDateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, callType, callerNumber, calledNumber, startDateTime, finishDateTime);
+    }
+
+    @Override
+    public String toString() {
+        return "Cdr{" +
+                "id=" + id +
+                ", callType='" + callType + '\'' +
+                ", callerNumber='" + callerNumber + '\'' +
+                ", calledNumber='" + calledNumber + '\'' +
+                ", startDateTime=" + startDateTime +
+                ", finishDateTime=" + finishDateTime +
+                '}';
     }
 }
