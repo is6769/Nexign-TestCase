@@ -22,6 +22,6 @@ public interface CdrRepository extends JpaRepository<Cdr,Long> {
     @Query("SELECT e FROM Cdr e WHERE YEAR(e.startDateTime) = :year AND MONTH(e.startDateTime) = :month AND e.callerNumber= :callerNumber")
     List<Cdr> findAllByCallerNumberAndStartDateTime(String callerNumber, int year, int month);
 
-    @Query("select c from Cdr c where c.calledNumber= :msisdn OR c.callerNumber= :msisdn AND c.startDateTime BETWEEN :startDate AND :endDate ORDER BY c.startDateTime ASC")
+    @Query("select c from Cdr c where (c.calledNumber= :msisdn OR c.callerNumber= :msisdn) AND c.startDateTime BETWEEN :startDate AND :endDate ORDER BY c.startDateTime ASC")
     List<Cdr> findAllByCalledNumberOrCalledNumberAndStartDateTimeBetweenOrderByStartDateTimeAsc(String msisdn, LocalDateTime startDate, LocalDateTime endDate);
 }

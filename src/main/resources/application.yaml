@@ -18,10 +18,11 @@ spring:
 
 springdoc:
   swagger-ui:
+    path: /v1/swagger-ui.html
     show-common-extensions: true
     operations-sorter: alpha
     tags-sorter: alpha
+    default-produces-media-type: application/json
     display-request-duration: true
     doc-expansion: none
-
-
+    disable-swagger-default-url: true

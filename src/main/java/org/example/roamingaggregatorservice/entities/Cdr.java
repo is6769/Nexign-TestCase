@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "sdrs")
+@Table(name = "cdrs")
 @Schema(description = "Запись данных вызова (Call Data Record)")
 public class Cdr {
 

@@ -47,8 +47,13 @@ public class UdrRestController {
                     content = @Content(schema = @Schema(implementation = ExceptionDTO.class)))
     })
     public ResponseEntity<UdrDTO> getUdrForSubscriber(
-            @Parameter(description = "Номер мобильного телефона абонента") @RequestParam String msisdn,
-            @Parameter(description = "Год и месяц в формате yyyy-mm (например, 2023-05)") @RequestParam(required = false) @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])$", message = "Предоставленный год и месяц не соответствуют формату yyyy-mm") String yearAndMonth
+            @Parameter(description = "Номер мобильного телефона абонента")
+            @RequestParam
+            String msisdn,
+
+            @Parameter(description = "Год и месяц в формате yyyy-mm (например, 2023-05)") @RequestParam(required = false)
+            @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])$", message = "Предоставленный год и месяц не соответствуют формату yyyy-mm")
+            String yearAndMonth
     ) {
         UdrDTO dto;
         if (Objects.nonNull(yearAndMonth)){
@@ -71,7 +76,10 @@ public class UdrRestController {
                     content = @Content(schema = @Schema(implementation = ExceptionDTO.class)))
     })
     public ResponseEntity<List<UdrDTO>> getUdrForAllSubscribersForOneMonth(
-            @Parameter(description = "Год и месяц в формате yyyy-mm (например, 2023-05)") @RequestParam String yearAndMonth
+            @Parameter(description = "Год и месяц в формате yyyy-mm (например, 2023-05)")
+            @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])$", message = "Предоставленный год и месяц не соответствуют формату yyyy-mm")
+            @RequestParam
+            String yearAndMonth
     ){
         List<UdrDTO> dtos = udrService.generateUdrForAllSubscribersForMonth(yearAndMonth);
         return ResponseEntity.ok(dtos);

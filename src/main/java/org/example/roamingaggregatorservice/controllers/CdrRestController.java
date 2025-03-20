@@ -35,11 +35,11 @@ public class CdrRestController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "CDR успешно сгенерированы", 
-                    content = @Content(schema = @Schema(type = "string", example = "Successfully generated cdr.")))
+                    content = @Content(schema = @Schema(type = "string", example = "Успешно сгенерированы cdr-записи.")))
     })
     public ResponseEntity<String> generateCDR(){
         cdrService.generateCdrForOneYear();
-        return ResponseEntity.ok("Successfully generated cdr.");
+        return ResponseEntity.ok("Успешно сгенерированы cdr-записи.");
     }
 
     @PostMapping("/report")
@@ -49,7 +49,7 @@ public class CdrRestController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Процесс генерации отчета успешно запущен",
-                    content = @Content(schema = @Schema(type = "string", example = "Successfully started generating cdr-report. UUID: a718ae8f-edf4-4c00-88d5-9d53eea95178")))
+                    content = @Content(schema = @Schema(type = "string", example = "Успешно сформирован cdr-отчет. UUID: a718ae8f-edf4-4c00-88d5-9d53eea95178")))
     })
     public ResponseEntity<String> generateCdrReport(
             @Parameter(description = "Номер абонента (MSISDN)", required = true, example = "79999999999")
@@ -63,10 +63,8 @@ public class CdrRestController {
     {
         UUID requestUUID = UUID.randomUUID();
 
-        //CompletableFuture.runAsync(()->cdrService.generateCdrReport(msisdn, startDate, endDate, requestUUID));
-
         cdrService.generateCdrReport(msisdn, startDate, endDate, requestUUID);
 
-        return ResponseEntity.ok("Successfully started generating cdr-report.UUID: %s".formatted(requestUUID));
+        return ResponseEntity.ok("Успешно сформирован cdr-отчет. UUID: %s".formatted(requestUUID));
     }
 }

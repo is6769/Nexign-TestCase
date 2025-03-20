@@ -1,4 +1,3 @@
-
 INSERT INTO subscribers (msisdn) VALUES ('79000000001');
 INSERT INTO subscribers (msisdn) VALUES ('79000000002');
 INSERT INTO subscribers (msisdn) VALUES ('79000000003');
