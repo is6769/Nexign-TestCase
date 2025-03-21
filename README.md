@@ -38,7 +38,7 @@
     ```
 3. Запустите приложение:
     ```bash
-    java -jar -Dspring.profiles.active=prod target/RoamingAggregatorService-0.0.1-SNAPSHOT.jar
+    java -jar -Dspring.profiles.active=prod RoamingAggregatorService-1.0.0-Stable.jar
     ```
 
 ### Инициализация тестовых данных
@@ -79,10 +79,10 @@ JDBC URL: jdbc:h2:mem:roaming-aggregator-db
 Для запуска приложения с определенным профилем используйте один из следующих вариантов:
 ```bash
 # Пример запуска с профилем разработки:
-java -jar -Dspring.profiles.active=dev target/RoamingAggregatorService-0.0.1-SNAPSHOT.jar
+java -jar -Dspring.profiles.active=dev RoamingAggregatorService-1.0.0-Stable.jar
 
 # Пример запуска с производственным профилем:
-java -jar -Dspring.profiles.active=prod target/RoamingAggregatorService-0.0.1-SNAPSHOT.jar
+java -jar -Dspring.profiles.active=prod RoamingAggregatorService-1.0.0-Stable.jar
 ```
 Это позволяет гибко настраивать параметры журналирования, в зависимости от среды.
 
