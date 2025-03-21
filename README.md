@@ -60,7 +60,9 @@
 
 Параметры подключения:
 JDBC URL: jdbc:h2:mem:roaming-aggregator-db
+
 Имя пользователя: sa
+
 Пароль: password
 
 ### Профили запуска
