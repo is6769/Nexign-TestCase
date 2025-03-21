@@ -10,9 +10,19 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.time.LocalDateTime;
 
+/**
+ * Обработчик исключений REST-запросов.
+ * Преобразует различные исключения в соответствующие HTTP-ответы с информацией об ошибке.
+ */
 @ControllerAdvice
 public class RestResponseExceptionsHandler {
 
+    /**
+     * Обрабатывает исключения валидации данных.
+     *
+     * @param ex Исключение валидации
+     * @return ResponseEntity с информацией об ошибке
+     */
     @ExceptionHandler(value = ConstraintViolationException.class)
     protected ResponseEntity<ExceptionDTO> handleConflict(ConstraintViolationException ex) {
         ExceptionDTO dto = new ExceptionDTO(
@@ -24,6 +34,12 @@ public class RestResponseExceptionsHandler {
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Обрабатывает исключения поиска несуществующего абонента.
+     *
+     * @param ex Исключение поиска абонента
+     * @return ResponseEntity с информацией об ошибке
+     */
     @ExceptionHandler(value = NoSuchSubscriberException.class)
     protected ResponseEntity<ExceptionDTO> handleConflict(NoSuchSubscriberException ex) {
         ExceptionDTO dto = new ExceptionDTO(
@@ -35,6 +51,12 @@ public class RestResponseExceptionsHandler {
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Обрабатывает исключения несоответствия типов аргументов метода.
+     *
+     * @param ex Исключение несоответствия типов
+     * @return ResponseEntity с информацией об ошибке
+     */
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<ExceptionDTO> handleConflict(MethodArgumentTypeMismatchException ex) {
         ExceptionDTO dto = new ExceptionDTO(
@@ -46,6 +68,12 @@ public class RestResponseExceptionsHandler {
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Обрабатывает исключения, когда начальная дата позже конечной даты.
+     *
+     * @param ex Исключение некорректных дат
+     * @return ResponseEntity с информацией об ошибке
+     */
     @ExceptionHandler(value = StartDateIsAfterEndDateException.class)
     protected ResponseEntity<ExceptionDTO> handleConflict(StartDateIsAfterEndDateException ex) {
         ExceptionDTO dto = new ExceptionDTO(

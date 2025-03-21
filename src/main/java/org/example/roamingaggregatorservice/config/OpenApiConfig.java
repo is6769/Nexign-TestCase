@@ -10,9 +10,29 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+/**
+ * Конфигурация OpenAPI для генерации документации API.
+ * <p>
+ * Этот класс настраивает компонент Swagger/OpenAPI, который
+ * предоставляет автоматически генерируемую документацию API,
+ * доступную через Swagger UI.
+ * </p>
+ * 
+ * @author Сервис роуминговой агрегации
+ * @since 1.0
+ */
 @Configuration
 public class OpenApiConfig {
 
+    /**
+     * Создает настроенный объект OpenAPI, который используется для генерации документации.
+     * <p>
+     * Метод задает основную информацию о API, включая название, версию,
+     * описание, контактную информацию и определяет доступные серверы.
+     * </p>
+     *
+     * @return Настроенный объект OpenAPI для документации
+     */
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()

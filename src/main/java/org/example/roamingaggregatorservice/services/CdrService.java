@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Сервис для работы с записями данных вызовов (CDR - Call Data Record).
+ * Предоставляет методы для генерации, поиска и формирования отчетов по CDR.
+ */
 @Service
 public class CdrService {
 
@@ -34,6 +38,10 @@ public class CdrService {
         this.cdrRepository = cdrRepository;
     }
 
+    /**
+     * Генерирует случайные записи CDR за последний год.
+     * Создает от 1000 до 2000 записей о звонках между абонентами.
+     */
     public void generateCdrForOneYear(){
         List<Subscriber> subscribers = subscriberService.findAll();
 
@@ -90,22 +98,62 @@ public class CdrService {
         cdrRepository.saveAll(generatedCdrs);
     }
 
+    /**
+     * Находит все записи CDR, где абонент был вызываемой стороной.
+     *
+     * @param msisdn Номер телефона абонента
+     * @return Список CDR, где абонент был вызываемой стороной
+     */
     public List<Cdr> findAllByCalledNumber(String msisdn) {
         return cdrRepository.findAllByCalledNumber(msisdn);
     }
 
+    /**
+     * Находит все записи CDR, где абонент был вызывающей стороной.
+     *
+     * @param msisdn Номер телефона абонента
+     * @return Список CDR, где абонент был вызывающей стороной
+     */
     public List<Cdr> findAllByCallerNumber(String msisdn) {
         return cdrRepository.findAllByCallerNumber(msisdn);
     }
 
+    /**
+     * Находит все записи CDR, где абонент был вызываемой стороной за указанный месяц и год.
+     *
+     * @param msisdn Номер телефона абонента
+     * @param year Год
+     * @param month Месяц
+     * @return Список CDR, где абонент был вызываемой стороной за указанный период
+     */
     public List<Cdr> findAllByCalledNumberAndStartDateTimeLike(String msisdn, int year, int month) {
         return cdrRepository.findAllByCalledNumberAndStartDateTime(msisdn, year, month);
     }
 
+    /**
+     * Находит все записи CDR, где абонент был вызывающей стороной за указанный месяц и год.
+     *
+     * @param msisdn Номер телефона абонента
+     * @param year Год
+     * @param month Месяц
+     * @return Список CDR, где абонент был вызывающей стороной за указанный период
+     */
     public List<Cdr> findAllByCallerNumberAndStartDateTimeLike(String msisdn, int year, int month) {
         return cdrRepository.findAllByCallerNumberAndStartDateTime(msisdn, year, month);
     }
 
+    /**
+     * Генерирует отчет по звонкам абонента за указанный период.
+     * Сохраняет отчет в файл в директории "reports".
+     *
+     * @param msisdn Номер телефона абонента
+     * @param startDate Начальная дата периода
+     * @param endDate Конечная дата периода
+     * @param requestUUID Уникальный идентификатор запроса
+     * @throws NoSuchSubscriberException если абонент с указанным номером не найден
+     * @throws StartDateIsAfterEndDateException если начальная дата позже конечной даты
+     * @throws RuntimeException при ошибках ввода-вывода
+     */
     public void generateCdrReport(String msisdn, LocalDate startDate, LocalDate endDate, UUID requestUUID) {
 
         subscriberService.checkIfSubscriberExistsOrElseThrowNoSuchSubscriberException(msisdn);

@@ -23,6 +23,17 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * REST-контроллер для работы с записями данных пользователя (UDR - User Data Records).
+ * <p>
+ * Контроллер предоставляет API для получения записей данных по конкретному 
+ * абоненту за определенный период или за все время, а также для получения 
+ * данных по всем абонентам за указанный месяц.
+ * </p>
+ * 
+ * @author Сервис роуминговой агрегации
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/v1/udr")
 @Validated
@@ -31,10 +42,27 @@ public class UdrRestController {
 
     private final UdrService udrService;
 
+    /**
+     * Конструктор контроллера UDR.
+     *
+     * @param udrService Сервис для работы с UDR данными
+     */
     public UdrRestController(UdrService udrService) {
         this.udrService = udrService;
     }
 
+    /**
+     * Получение записей данных по конкретному абоненту.
+     * <p>
+     * Метод возвращает информацию о входящих и исходящих звонках указанного абонента.
+     * Если параметр yearAndMonth не указан, возвращаются данные за все время.
+     * В противном случае возвращаются данные только за указанный месяц.
+     * </p>
+     *
+     * @param msisdn Номер мобильного телефона абонента
+     * @param yearAndMonth Опционально: год и месяц в формате yyyy-mm (например, 2023-05)
+     * @return Объект ResponseEntity, содержащий данные абонента
+     */
     @GetMapping
     @Operation(
             summary = "Получить UDR для абонента",
@@ -51,7 +79,8 @@ public class UdrRestController {
             @RequestParam
             String msisdn,
 
-            @Parameter(description = "Год и месяц в формате yyyy-mm (например, 2023-05)") @RequestParam(required = false)
+            @Parameter(description = "Год и месяц в формате yyyy-mm (например, 2023-05)") 
+            @RequestParam(required = false)
             @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])$", message = "Предоставленный год и месяц не соответствуют формату yyyy-mm")
             String yearAndMonth
     ) {
@@ -64,6 +93,16 @@ public class UdrRestController {
         return ResponseEntity.ok(dto);
     }
 
+    /**
+     * Получение записей данных для всех абонентов за указанный месяц.
+     * <p>
+     * Метод возвращает информацию о входящих и исходящих звонках для всех 
+     * абонентов, зарегистрированных в системе, за указанный месяц.
+     * </p>
+     *
+     * @param yearAndMonth Год и месяц в формате yyyy-mm (например, 2023-05)
+     * @return Объект ResponseEntity, содержащий список данных по всем абонентам
+     */
     @GetMapping("/all")
     @Operation(
             summary = "Получить UDR для всех абонентов за месяц",
