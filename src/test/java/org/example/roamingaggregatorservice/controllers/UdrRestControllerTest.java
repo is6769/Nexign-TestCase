@@ -28,6 +28,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Тесты для REST-контроллера UdrRestController.
+ */
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UdrRestController.class)
 public class UdrRestControllerTest {
@@ -41,6 +44,13 @@ public class UdrRestControllerTest {
     @Captor
     private ArgumentCaptor<String> stringCaptor;
 
+    /**
+     * Тест получения UDR для абонента за все время.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос без указания
+     * параметра yearAndMonth и возвращает данные за все время.
+     * </p>
+     */
     @Test
     public void getUdrForSubscriber_WithoutYearAndMonth_ShouldReturnAllTimeData() throws Exception {
         // Given
@@ -69,6 +79,13 @@ public class UdrRestControllerTest {
         verify(udrService, times(0)).generateUdrForSubscriberForMonth(any(), any());
     }
 
+    /**
+     * Тест получения UDR для абонента за указанный месяц.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос с указанием
+     * параметра yearAndMonth и возвращает данные только за этот месяц.
+     * </п>
+     */
     @Test
     public void getUdrForSubscriber_WithYearAndMonth_ShouldReturnMonthData() throws Exception {
         // Given
@@ -83,7 +100,7 @@ public class UdrRestControllerTest {
         when(udrService.generateUdrForSubscriberForMonth(eq(msisdn), eq(yearAndMonth)))
                 .thenReturn(mockUdrDTO);
 
-        // When & Then
+        // When 
         mockMvc.perform(get("/v1/udr")
                         .param("msisdn", msisdn)
                         .param("yearAndMonth", yearAndMonth)
@@ -94,11 +111,18 @@ public class UdrRestControllerTest {
                 .andExpect(jsonPath("$.incomingCall.totalTime", is("00:45:15")))
                 .andExpect(jsonPath("$.outcomingCall.totalTime", is("01:10:30")));
 
-        // Verify service was called with correct parameters
+        // Then
         verify(udrService, times(0)).generateUdrForSubscriberForAllTime(any());
         verify(udrService, times(1)).generateUdrForSubscriberForMonth(eq(msisdn), eq(yearAndMonth));
     }
 
+    /**
+     * Тест получения UDR с некорректным форматом месяца и года.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос с неверным
+     * форматом параметра yearAndMonth и возвращает ошибку валидации.
+     * </п>
+     */
     @Test
     public void getUdrForSubscriber_WithInvalidYearAndMonth_ShouldReturnBadRequest() throws Exception {
         // Given
@@ -119,6 +143,13 @@ public class UdrRestControllerTest {
         verify(udrService, times(0)).generateUdrForSubscriberForMonth(any(), any());
     }
 
+    /**
+     * Тест получения UDR для несуществующего абонента.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос для несуществующего
+     * абонента и возвращает соответствующую ошибку.
+     * </п>
+     */
     @Test
     public void getUdrForSubscriber_WithNonExistentSubscriber_ShouldReturnBadRequest() throws Exception {
         // Given
@@ -140,6 +171,13 @@ public class UdrRestControllerTest {
         verify(udrService, times(1)).generateUdrForSubscriberForAllTime(eq(msisdn));
     }
 
+    /**
+     * Тест получения UDR для всех абонентов за указанный месяц.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос на получение
+     * данных для всех абонентов и возвращает список результатов.
+     * </п>
+     */
     @Test
     public void getUdrForAllSubscribersForOneMonth_WithValidYearAndMonth_ShouldReturnData() throws Exception {
         // Given
@@ -166,6 +204,13 @@ public class UdrRestControllerTest {
         verify(udrService, times(1)).generateUdrForAllSubscribersForMonth(eq(yearAndMonth));
     }
 
+    /**
+     * Тест получения UDR для всех абонентов с пустым результатом.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает случай, когда
+     * результат запроса - пустой список, и возвращает пустой массив.
+     * </п>
+     */
     @Test
     public void getUdrForAllSubscribersForOneMonth_WithEmptyResult_ShouldReturnEmptyArray() throws Exception {
         // Given
@@ -186,6 +231,13 @@ public class UdrRestControllerTest {
         verify(udrService, times(1)).generateUdrForAllSubscribersForMonth(eq(yearAndMonth));
     }
 
+    /**
+     * Тест получения UDR для всех абонентов с некорректным форматом месяца и года.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос с неверным
+     * форматом параметра yearAndMonth и возвращает ошибку валидации.
+     * </п>
+     */
     @Test
     public void getUdrForAllSubscribersForOneMonth_WithInvalidYearAndMonth_ShouldReturnBadRequest() throws Exception {
         // Given
@@ -203,6 +255,13 @@ public class UdrRestControllerTest {
         verify(udrService, times(0)).generateUdrForAllSubscribersForMonth(any());
     }
 
+    /**
+     * Тест получения UDR для всех абонентов без указания обязательного параметра.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос без обязательного
+     * параметра yearAndMonth и возвращает ошибку 400 Bad Request.
+     * </п>
+     */
     @Test
     public void getUdrForAllSubscribersForOneMonth_WithMissingYearAndMonth_ShouldReturnBadRequest() throws Exception {
         // When

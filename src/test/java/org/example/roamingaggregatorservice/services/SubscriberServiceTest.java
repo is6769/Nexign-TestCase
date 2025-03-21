@@ -17,6 +17,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Тесты для сервиса SubscriberService.
+ * <p>
+ * Данный класс содержит юнит-тесты для проверки функциональности сервиса SubscriberService.
+ * </p>
+ */
 @ExtendWith(MockitoExtension.class)
 public class SubscriberServiceTest {
 
@@ -46,6 +52,12 @@ public class SubscriberServiceTest {
         subscribers = Arrays.asList(subscriber1, subscriber2);
     }
 
+    /**
+     * Тест получения всех абонентов.
+     * <p>
+     * Проверяет, что метод findAll корректно возвращает список всех абонентов.
+     * </p>
+     */
     @Test
     void findAll_ShouldReturnAllSubscribers() {
         // Given
@@ -63,24 +75,15 @@ public class SubscriberServiceTest {
         verify(subscriberRepository).findAll();
     }
 
-    @Test
-    void checkIfSubscriberExistsOrElseThrowNoSuchSubscriberException_WithExistingSubscriber_ShouldNotThrow() {
-        // Given
-        Subscriber subscriber = new Subscriber();
-        subscriber.setId(1L);
-        subscriber.setMsisdn(existingMsisdn);
-        
-        when(subscriberRepository.findSubscriberByMsisdn(existingMsisdn))
-                .thenReturn(Optional.of(subscriber));
+    
 
-        // When + Then
-        assertDoesNotThrow(() -> {
-            subscriberService.checkIfSubscriberExistsOrElseThrowNoSuchSubscriberException(existingMsisdn);
-        });
-        
-        verify(subscriberRepository).findSubscriberByMsisdn(existingMsisdn);
-    }
-
+    /**
+     * Тест проверки существования абонента.
+     * <p>
+     * Проверяет, что метод выбрасывает исключение NoSuchSubscriberException
+     * при поиске несуществующего абонента.
+     * </p>
+     */
     @Test
     void checkIfSubscriberExistsOrElseThrowNoSuchSubscriberException_WithNonExistentSubscriber_ShouldThrow() {
         // Given

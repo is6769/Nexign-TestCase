@@ -12,6 +12,12 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Интеграционные тесты для репозитория SubscriberRepository.
+ * <p>
+ * Данный класс содержит тесты для проверки функциональности репозитория SubscriberRepository.
+ * </p>
+ */
 @DataJpaTest
 public class SubscriberRepositoryTest {
 
@@ -28,6 +34,13 @@ public class SubscriberRepositoryTest {
         entityManager.flush();
     }
 
+    /**
+     * Тест поиска абонента по MSISDN с положительным результатом.
+     * <p>
+     * Проверяет, что метод findSubscriberByMsisdn корректно находит
+     * абонента по существующему номеру.
+     * </p>
+     */
     @Test
     public void findSubscriberByMsisdn_WithExistingMsisdn_ShouldReturnSubscriber() {
         // Given - use UUID to ensure unique MSISDNs across test runs
@@ -46,6 +59,13 @@ public class SubscriberRepositoryTest {
         assertEquals(msisdn, found.get().getMsisdn());
     }
 
+    /**
+     * Тест поиска абонента по MSISDN с отрицательным результатом.
+     * <p>
+     * Проверяет, что метод findSubscriberByMsisdn возвращает пустой Optional
+     * при поиске по несуществующему номеру.
+     * </p>
+     */
     @Test
     public void findSubscriberByMsisdn_WithNonExistentMsisdn_ShouldReturnEmpty() {
         // Given - use UUID to ensure unique MSISDNs across test runs
@@ -64,6 +84,13 @@ public class SubscriberRepositoryTest {
         assertFalse(found.isPresent());
     }
 
+    /**
+     * Тест получения всех абонентов.
+     * <p>
+     * Проверяет, что метод findAll корректно возвращает все сохраненные
+     * в базе данных записи абонентов.
+     * </p>
+     */
     @Test
     public void findAll_WithMultipleSubscribers_ShouldReturnAllSubscribers() {
         // Given - use UUID to ensure unique MSISDNs across test runs
@@ -92,6 +119,13 @@ public class SubscriberRepositoryTest {
         assertEquals(3, count);
     }
 
+    /**
+     * Тест сохранения нового абонента.
+     * <p>
+     * Проверяет, что метод save корректно сохраняет нового абонента
+     * в базу данных и присваивает ему идентификатор.
+     * </p>
+     */
     @Test
     public void save_WithNewSubscriber_ShouldSaveAndAssignId() {
         // Given - use UUID to ensure unique MSISDNs across test runs

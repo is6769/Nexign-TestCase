@@ -97,10 +97,10 @@ public class CdrRestController {
             @Parameter(description = "Номер абонента (MSISDN)", required = true, example = "79999999999")
             @RequestParam String msisdn,
 
-            @Parameter(description = "Дата начала периода", required = true, example = "2024-01-01")
+            @Parameter(description = "Дата начала периода", required = true, example = "2024-03-01")
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 
-            @Parameter(description = "Дата окончания периода", required = true, example = "2024-03-01")
+            @Parameter(description = "Дата окончания периода", required = true, example = "2024-07-01")
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
     {
         UUID requestUUID = UUID.randomUUID();

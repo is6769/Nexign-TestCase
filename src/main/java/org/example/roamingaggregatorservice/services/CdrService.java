@@ -2,6 +2,7 @@ package org.example.roamingaggregatorservice.services;
 
 import org.example.roamingaggregatorservice.entities.Cdr;
 import org.example.roamingaggregatorservice.entities.Subscriber;
+import org.example.roamingaggregatorservice.exceptions.NoSuchSubscriberException;
 import org.example.roamingaggregatorservice.exceptions.StartDateIsAfterEndDateException;
 import org.example.roamingaggregatorservice.repositories.CdrRepository;
 import org.example.roamingaggregatorservice.repositories.SubscriberRepository;
@@ -81,8 +82,6 @@ public class CdrService {
 
             var callStartDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(callStartMillis),ZoneId.of("Europe/Moscow"));
             var callFinishDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(callFinishMillis),ZoneId.of("Europe/Moscow"));
-
-            //TODO choose to add or not the inverse side of call(i mean if someone called someone, that means that someone was called by someone)
 
             generatedCdr.setCallType(callType);
             generatedCdr.setCallerNumber(caller.getMsisdn());
@@ -185,6 +184,7 @@ public class CdrService {
                         cdr.getStartDateTime(),
                         cdr.getFinishDateTime()
                 ));
+                writer.newLine();
                 writer.newLine();
             }
         } catch (IOException e) {

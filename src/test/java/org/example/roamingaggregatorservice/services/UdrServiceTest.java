@@ -19,6 +19,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Тесты для сервиса UdrService.
+ * <p>
+ * Данный класс содержит юнит-тесты для проверки функциональности сервиса UdrService.
+ * </p>
+ */
 @ExtendWith(MockitoExtension.class)
 public class UdrServiceTest {
 
@@ -72,6 +78,13 @@ public class UdrServiceTest {
         subscribers = Arrays.asList(subscriber1, subscriber2);
     }
 
+    /**
+     * Тест генерации UDR для абонента за указанный месяц.
+     * <p>
+     * Проверяет, что метод правильно вычисляет общее время входящих и исходящих звонков
+     * для конкретного абонента за указанный месяц.
+     * </p>
+     */
     @Test
     void generateUdrForSubscriberForMonth_ShouldReturnCorrectData() {
         // Given
@@ -93,6 +106,13 @@ public class UdrServiceTest {
         verify(cdrService).findAllByCallerNumberAndStartDateTimeLike(msisdn, 2023, 5);
     }
 
+    /**
+     * Тест генерации UDR для несуществующего абонента.
+     * <p>
+     * Проверяет, что метод выбрасывает исключение NoSuchSubscriberException
+     * при попытке сгенерировать UDR для абонента, которого нет в системе.
+     * </p>
+     */
     @Test
     void generateUdrForSubscriberForMonth_WithNonExistentSubscriber_ShouldThrowException() {
         // Given
@@ -109,6 +129,13 @@ public class UdrServiceTest {
         verify(cdrService, never()).findAllByCallerNumberAndStartDateTimeLike(anyString(), anyInt(), anyInt());
     }
 
+    /**
+     * Тест генерации UDR для абонента за все время.
+     * <p>
+     * Проверяет, что метод правильно вычисляет общее время входящих и исходящих звонков
+     * для конкретного абонента за весь период.
+     * </p>
+     */
     @Test
     void generateUdrForSubscriberForAllTime_ShouldReturnCorrectData() {
         // Given
@@ -130,6 +157,13 @@ public class UdrServiceTest {
         verify(cdrService).findAllByCallerNumber(msisdn);
     }
 
+    /**
+     * Тест генерации UDR для всех абонентов за указанный месяц.
+     * <p>
+     * Проверяет, что метод правильно формирует список UDR для всех абонентов
+     * в системе за указанный месяц.
+     * </p>
+     */
     @Test
     void generateUdrForAllSubscribersForMonth_ShouldReturnAllSubscribers() {
         // Given
@@ -171,6 +205,13 @@ public class UdrServiceTest {
         verify(subscriberService, times(subscribers.size())).checkIfSubscriberExistsOrElseThrowNoSuchSubscriberException(anyString());
     }
 
+    /**
+     * Тест генерации UDR для абонента без звонков.
+     * <p>
+     * Проверяет, что метод правильно формирует UDR с нулевой продолжительностью
+     * для абонента, у которого не было звонков за указанный период.
+     * </p>
+     */
     @Test
     void generateUdrForSubscriberForMonth_WithNoCalls_ShouldReturnZeroDuration() {
         // Given

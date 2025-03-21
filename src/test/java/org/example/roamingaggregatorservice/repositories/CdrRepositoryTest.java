@@ -13,6 +13,12 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Интеграционные тесты для репозитория CdrRepository.
+ * <p>
+ * Данный класс содержит тесты для проверки функциональности репозитория CdrRepository.
+ * </p>
+ */
 @DataJpaTest
 public class CdrRepositoryTest {
 
@@ -57,6 +63,18 @@ public class CdrRepositoryTest {
                 LocalDateTime.of(2023, 5, 25, 14, 3, 45));
     }
     
+    /**
+     * Вспомогательный метод для создания и сохранения CDR записи.
+     * <p>
+     * Создает объект Cdr с указанными параметрами и сохраняет его в базу данных.
+     * </p>
+     * 
+     * @param callType Тип вызова
+     * @param callerNumber Номер вызывающего абонента
+     * @param calledNumber Номер вызываемого абонента
+     * @param startDateTime Время начала вызова
+     * @param finishDateTime Время окончания вызова
+     */
     private void createAndPersistCdr(String callType, String callerNumber, String calledNumber, 
                                     LocalDateTime startDateTime, LocalDateTime finishDateTime) {
         Cdr cdr = new Cdr();
@@ -68,6 +86,13 @@ public class CdrRepositoryTest {
         entityManager.persist(cdr);
     }
 
+    /**
+     * Тест поиска всех CDR по номеру вызываемого абонента.
+     * <p>
+     * Проверяет, что метод findAllByCalledNumber корректно возвращает
+     * все записи, где указанный номер является вызываемым.
+     * </p>
+     */
     @Test
     public void findAllByCalledNumber_ShouldReturnCorrectCdrs() {
         // When
@@ -78,6 +103,13 @@ public class CdrRepositoryTest {
         results.forEach(cdr -> assertEquals(calledMsisdn, cdr.getCalledNumber()));
     }
 
+    /**
+     * Тест поиска всех CDR по номеру вызывающего абонента.
+     * <p>
+     * Проверяет, что метод findAllByCallerNumber корректно возвращает
+     * все записи, где указанный номер является вызывающим.
+     * </p>
+     */
     @Test
     public void findAllByCallerNumber_ShouldReturnCorrectCdrs() {
         // When
@@ -88,6 +120,13 @@ public class CdrRepositoryTest {
         results.forEach(cdr -> assertEquals(callerMsisdn, cdr.getCallerNumber()));
     }
 
+    /**
+     * Тест поиска всех CDR по номеру вызываемого абонента за указанный месяц и год.
+     * <p>
+     * Проверяет, что метод findAllByCalledNumberAndStartDateTime корректно
+     * фильтрует записи по дате и возвращает только подходящие.
+     * </п>
+     */
     @Test
     public void findAllByCalledNumberAndStartDateTime_ShouldReturnCorrectCdrs() {
         // When
@@ -101,6 +140,13 @@ public class CdrRepositoryTest {
         assertEquals(2, februaryCdr.getStartDateTime().getMonthValue());
     }
 
+    /**
+     * Тест поиска всех CDR по номеру вызывающего абонента за указанный месяц и год.
+     * <p>
+     * Проверяет, что метод findAllByCallerNumberAndStartDateTime корректно
+     * фильтрует записи по дате и возвращает только подходящие.
+     * </п>
+     */
     @Test
     public void findAllByCallerNumberAndStartDateTime_ShouldReturnCorrectCdrs() {
         // When
@@ -114,6 +160,13 @@ public class CdrRepositoryTest {
         assertEquals(3, marchCdr.getStartDateTime().getMonthValue());
     }
 
+    /**
+     * Тест поиска всех CDR в указанном диапазоне дат.
+     * <p>
+     * Проверяет, что метод findAllByCalledNumberOrCalledNumberAndStartDateTimeBetweenOrderByStartDateTimeAsc
+     * корректно фильтрует записи по диапазону дат и возвращает отсортированный результат.
+     * </п>
+     */
     @Test
     public void findAllByCalledNumberOrCalledNumberAndStartDateTimeBetween_ShouldReturnCorrectCdrs() {
         // Given
@@ -133,6 +186,13 @@ public class CdrRepositoryTest {
         assertTrue(results.get(0).getStartDateTime().isBefore(results.get(1).getStartDateTime()));
     }
 
+    /**
+     * Тест пакетного сохранения CDR записей.
+     * <p>
+     * Проверяет, что метод saveAll корректно сохраняет несколько CDR записей
+     * в базу данных за один вызов.
+     * </п>
+     */
     @Test
     public void saveAll_ShouldSaveMultipleCdrs() {
         // Given

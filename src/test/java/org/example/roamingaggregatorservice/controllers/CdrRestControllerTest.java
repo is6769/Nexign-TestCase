@@ -27,6 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Тесты для REST-контроллера CdrRestController.
+ */
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(CdrRestController.class)
 public class CdrRestControllerTest {
@@ -40,6 +43,13 @@ public class CdrRestControllerTest {
     @Captor
     private ArgumentCaptor<UUID> uuidCaptor;
 
+    /**
+     * Тест генерации CDR записей.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос на генерацию CDR
+     * и возвращает сообщение об успешном выполнении.
+     * </p>
+     */
     @Test
     public void generateCDR_ShouldReturnSuccessMessage() throws Exception {
         // Given
@@ -56,6 +66,13 @@ public class CdrRestControllerTest {
         verify(cdrService, times(1)).generateCdrForOneYear();
     }
 
+    /**
+     * Тест генерации отчета CDR с корректными параметрами.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос на генерацию
+     * отчета CDR и возвращает сообщение об успешном выполнении.
+     * </p>
+     */
     @Test
     public void generateCdrReport_WithValidParameters_ShouldReturnSuccessMessage() throws Exception {
         // Given
@@ -83,6 +100,13 @@ public class CdrRestControllerTest {
                 any(UUID.class));
     }
 
+    /**
+     * Тест генерации отчета CDR с неверным диапазоном дат.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос с неверным
+     * диапазоном дат и возвращает соответствующую ошибку.
+     * </p>
+     */
     @Test
     public void generateCdrReport_WithInvalidDateRange_ShouldReturnBadRequest() throws Exception {
         // Given
@@ -104,6 +128,13 @@ public class CdrRestControllerTest {
                 .andExpect(content().string(containsString("BAD_REQUEST")));
     }
 
+    /**
+     * Тест генерации отчета CDR для несуществующего абонента.
+     * <p>
+     * Проверяет, что метод корректно обрабатывает запрос для несуществующего
+     * абонента и возвращает соответствующую ошибку.
+     * </p>
+     */
     @Test
     public void generateCdrReport_WithNonExistentSubscriber_ShouldReturnBadRequest() throws Exception {
         // Given
@@ -126,6 +157,13 @@ public class CdrRestControllerTest {
                 .andExpect(content().string(containsString("не найден")));
     }
 
+    /**
+     * Тест генерации UUID для отчета CDR.
+     * <p>
+     * Проверяет, что при генерации отчета метод создает валидный UUID
+     * и правильно передает его в сервис.
+     * </p>
+     */
     @Test
     public void generateCdrReport_ShouldGenerateValidUUID() throws Exception {
         // Given

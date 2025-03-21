@@ -29,6 +29,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Тесты для сервиса CdrService.
+ * <p>
+ * Данный класс содержит юнит-тесты для проверки функциональности сервиса CdrService.
+ * </p>
+ */
 @ExtendWith(MockitoExtension.class)
 public class CdrServiceTest {
 
@@ -87,6 +93,13 @@ public class CdrServiceTest {
         System.setProperty("user.dir", tempDir.toString());
     }
 
+    /**
+     * Тест генерации CDR за один год.
+     * <p>
+     * Проверяет, что метод правильно генерирует CDR записи для всех абонентов
+     * за период одного года и сохраняет их в репозиторий.
+     * </p>
+     */
     @Test
     void generateCdrForOneYear_ShouldGenerateAndSaveCdrs() {
         // Given
@@ -122,6 +135,13 @@ public class CdrServiceTest {
         }
     }
 
+    /**
+     * Тест поиска всех CDR по номеру вызываемого абонента.
+     * <p>
+     * Проверяет, что метод корректно запрашивает и возвращает список CDR,
+     * где указанный номер является вызываемым.
+     * </p>
+     */
     @Test
     void findAllByCalledNumber_ShouldReturnCorrectCdrs() {
         // Given
@@ -138,6 +158,13 @@ public class CdrServiceTest {
         verify(cdrRepository).findAllByCalledNumber(msisdn);
     }
 
+    /**
+     * Тест поиска всех CDR по номеру вызывающего абонента.
+     * <p>
+     * Проверяет, что метод корректно запрашивает и возвращает список CDR,
+     * где указанный номер является вызывающим.
+     * </p>
+     */
     @Test
     void findAllByCallerNumber_ShouldReturnCorrectCdrs() {
         // Given
@@ -154,6 +181,13 @@ public class CdrServiceTest {
         verify(cdrRepository).findAllByCallerNumber(msisdn);
     }
 
+    /**
+     * Тест поиска всех CDR по номеру вызываемого абонента за указанный месяц и год.
+     * <p>
+     * Проверяет, что метод корректно фильтрует CDR записи по дате и
+     * возвращает только те, которые соответствуют указанному месяцу и году.
+     * </p>
+     */
     @Test
     void findAllByCalledNumberAndStartDateTimeLike_ShouldReturnCorrectCdrs() {
         // Given
@@ -172,6 +206,13 @@ public class CdrServiceTest {
         verify(cdrRepository).findAllByCalledNumberAndStartDateTime(msisdn, 2023, 5);
     }
 
+    /**
+     * Тест поиска всех CDR по номеру вызывающего абонента за указанный месяц и год.
+     * <p>
+     * Проверяет, что метод корректно фильтрует CDR записи по дате и
+     * возвращает только те, которые соответствуют указанному месяцу и году.
+     * </p>
+     */
     @Test
     void findAllByCallerNumberAndStartDateTimeLike_ShouldReturnCorrectCdrs() {
         // Given
@@ -190,6 +231,13 @@ public class CdrServiceTest {
         verify(cdrRepository).findAllByCallerNumberAndStartDateTime(msisdn, 2023, 5);
     }
 
+    /**
+     * Тест генерации отчета CDR с корректными параметрами.
+     * <p>
+     * Проверяет, что метод правильно создает файл отчета с
+     * информацией о вызовах для указанного абонента за заданный период.
+     * </p>
+     */
     @Test
     void generateCdrReport_WithValidParameters_ShouldCreateReport() throws IOException {
         // Given
@@ -218,7 +266,7 @@ public class CdrServiceTest {
         assertTrue(Files.exists(reportFile));
 
         List<String> fileLines = Files.readAllLines(reportFile);
-        assertEquals(cdrs.size(), fileLines.size());
+        assertEquals(cdrs.size()*2, fileLines.size());
 
         String expectedLine1 = String.format("%s,%s,%s,%s,%s",
                 cdrs.get(0).getCallType(),
@@ -229,6 +277,13 @@ public class CdrServiceTest {
         assertEquals(expectedLine1, fileLines.get(0));
     }
 
+    /**
+     * Тест генерации отчета CDR для несуществующего абонента.
+     * <p>
+     * Проверяет, что метод выбрасывает исключение NoSuchSubscriberException
+     * при попытке сгенерировать отчет для несуществующего абонента.
+     * </p>
+     */
     @Test
     void generateCdrReport_WithNonExistentSubscriber_ShouldThrowException() {
         // Given
@@ -249,6 +304,13 @@ public class CdrServiceTest {
                 anyString(), any(), any());
     }
 
+    /**
+     * Тест генерации отчета CDR с неверным диапазоном дат.
+     * <p>
+     * Проверяет, что метод выбрасывает исключение StartDateIsAfterEndDateException,
+     * если начальная дата позже конечной.
+     * </p>
+     */
     @Test
     void generateCdrReport_WithInvalidDateRange_ShouldThrowException() {
         // Given
